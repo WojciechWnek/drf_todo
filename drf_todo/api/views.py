@@ -15,5 +15,6 @@ class TaskViewSet(viewsets.ModelViewSet):
         task = self.get_object()
         task.completed =not task.completed
         task.save()
-        return Response({'status': f'Task marked as {"completed" if task.completed else "not completed"}'},
-                        status=status.HTTP_200_OK)
+
+        return Response(TaskSerializer(task).data, status=status.HTTP_200_OK)
+
