@@ -13,6 +13,9 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """Return only the tasks that belong to the logged-in user."""
+        if self.request.user.is_superuser:
+            return Task.objects.all()
+
         return Task.objects.filter(owner=self.request.user)
 
     def perform_create(self, serializer):
