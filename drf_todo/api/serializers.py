@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Task
+from .models import Task, Project
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.ModelSerializer):
@@ -10,7 +10,18 @@ class UserSerializer(serializers.ModelSerializer):
             "username"
         ]
 
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = [
+            "id",
+            "name",
+            "owner"
+        ]
+
 class TaskSerializer(serializers.ModelSerializer):
+    project = ProjectSerializer(read_only=True)
+
     class Meta:
         model = Task
         fields = [
@@ -19,6 +30,7 @@ class TaskSerializer(serializers.ModelSerializer):
             'description',
             "due_date",
             "status",
+            "project",
         ]
 
     def to_representation(self, instance):

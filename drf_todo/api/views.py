@@ -4,9 +4,23 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser
 
-from .models import Task
-from .serializers import TaskSerializer, TaskStatusUpdateSerializer
+from .models import Task, Project
+from .serializers import TaskSerializer, TaskStatusUpdateSerializer, ProjectSerializer
 
+
+class ProjectViewSet(viewsets.ModelViewSet):
+    serializer_class = ProjectSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        """Return only the projects that belong to the logged-in user."""
+        if self.request.user.is_superuser:
+            return Project.objects.all()
+
+        return Project.objects.filter(owner=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer

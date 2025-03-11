@@ -5,5 +5,6 @@ urlpatterns = []
 
 router = DefaultRouter()
 router.register('tasks', views.TaskViewSet, basename="task")
+router.register("projects", views.ProjectViewSet, basename="project")
 
 urlpatterns += router.urls

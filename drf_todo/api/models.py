@@ -3,6 +3,15 @@ from django.utils import timezone
 
 from django.contrib.auth.models import User
 
+
+class Project(models.Model):
+    name = models.CharField(max_length=200)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="projects")
+
+    def __str__(self):
+        return f"{self.id} - {self.name}"
+
+
 class Task(models.Model):
     class StatusChoices(models.TextChoices):
         TODO = "Todo"
@@ -13,7 +22,8 @@ class Task(models.Model):
 
     title = models.CharField(max_length=200)
     description =models.TextField(blank=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks")
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="tasks")
     due_date = models.DateField()
     status = models.CharField(
         max_length=12,
