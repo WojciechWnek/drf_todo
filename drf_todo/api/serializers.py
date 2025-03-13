@@ -11,6 +11,8 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
 class ProjectSerializer(serializers.ModelSerializer):
+    owner = UserSerializer()
+
     class Meta:
         model = Project
         fields = [
